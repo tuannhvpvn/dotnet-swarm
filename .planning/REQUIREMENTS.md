@@ -56,9 +56,9 @@
 
 ### SOP Compliance
 
-- [ ] **SOP-01**: Create `SOPEnforcer` to programmatically validate SOP Sections A, B, E, and I
-- [ ] **SOP-02**: Generative SOP-formatted reports via `app/utils/reporter.py`
-- [ ] **SOP-03**: Implement precise state transitions (normal/blocked/remediation)
+- [x] **SOP-01**: Create `SOPEnforcer` to programmatically validate SOP Sections A, B, E, and I
+- [x] **SOP-02**: Generative SOP-formatted reports via `app/utils/reporter.py`
+- [x] **SOP-03**: Implement precise state transitions (normal/blocked/remediation)
 
 ### Polish & Integration
 
@@ -119,9 +119,9 @@
 | SKL-07 | Phase 6 | Pending |
 | SKL-08 | Phase 6 | Pending |
 | SKL-09 | Phase 6 | Complete |
-| SOP-01 | Phase 7 | Pending |
-| SOP-02 | Phase 7 | Pending |
-| SOP-03 | Phase 7 | Pending |
+| SOP-01 | Phase 7 | Complete |
+| SOP-02 | Phase 7 | Complete |
+| SOP-03 | Phase 7 | Complete |
 | POL-01 | Phase 8 | Pending |
 | POL-02 | Phase 8 | Pending |
 | POL-03 | Phase 8 | Pending |
