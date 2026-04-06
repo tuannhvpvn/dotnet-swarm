@@ -7,6 +7,11 @@ class TaskItem(BaseModel):
     title: str
     status: Literal["pending", "in_progress", "completed", "failed"] = "pending"
     logs: List[str] = Field(default_factory=list)
+    # SOP fields — required by SOPEnforcer pre_task_check (Phase 7)
+    source_files: list[str] = Field(default_factory=list)
+    target_files: list[str] = Field(default_factory=list)
+    done_criteria: str | None = None
+    verify_command: str | None = None
 
 class BuildError(BaseModel):
     error_code: str
