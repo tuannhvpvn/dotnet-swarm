@@ -19,11 +19,11 @@
 
 ### Tool Adapter
 
-- [ ] **TAD-01**: Implement custom harness adapters for `omo`, `omx`, `omc`, and `kiro`
-- [ ] **TAD-02**: Add retry mechanics via `tenacity` for agent tool external calls
-- [ ] **TAD-03**: Create Jinja2 context injection templates for each internal harness framework
-- [ ] **TAD-04**: Map task routing configuration via `app/tools/config.yaml`
-- [ ] **TAD-05**: Reverse engineer undocumented oh-my-* CLI API interfaces
+- [x] **TAD-01**: Implement custom harness adapters for `omo`, `omx`, `omc`, and `kiro`
+- [x] **TAD-02**: Add retry mechanics via `tenacity` for agent tool external calls
+- [x] **TAD-03**: Create Jinja2 context injection templates for each internal harness framework
+- [x] **TAD-04**: Map task routing configuration via `app/tools/config.yaml`
+- [x] **TAD-05**: Reverse engineer undocumented oh-my-* CLI API interfaces
 
 ### Graph Redesign
 
@@ -94,11 +94,11 @@
 | SFE-01 | Phase 2 | Complete |
 | SFE-02 | Phase 2 | Complete |
 | SFE-03 | Phase 2 | Complete |
-| TAD-01 | Phase 3 | Pending |
-| TAD-02 | Phase 3 | Pending |
-| TAD-03 | Phase 3 | Pending |
-| TAD-04 | Phase 3 | Pending |
-| TAD-05 | Phase 3 | Pending |
+| TAD-01 | Phase 3 | Complete |
+| TAD-02 | Phase 3 | Complete |
+| TAD-03 | Phase 3 | Complete |
+| TAD-04 | Phase 3 | Complete |
+| TAD-05 | Phase 3 | Complete |
 | GRD-01 | Phase 4 | Pending |
 | GRD-02 | Phase 4 | Pending |
 | GRD-03 | Phase 4 | Pending |
