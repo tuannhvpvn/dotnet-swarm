@@ -17,9 +17,9 @@ Reliable, safe, and autonomous migration of .NET applications without risking pr
 - ✓ Basic CLI interface via Typer — existing
 - ✓ Isolated execution via Git Worktrees — existing
 - ✓ Complete Phase 1: Foundation (Redesign `MigrationState` and Persistence SQL schema) — Validated in Phase 1: Foundation
+- ✓ Complete Phase 2: Safety Layer (Pre-flight checks to prevent unwanted destructive actions) — Validated in Phase 2: Safety Layer
 
 ### Active
-- [ ] Complete Phase 1: Safety Layer (Pre-flight checks to prevent unwanted destructive actions)
 - [ ] Complete Phase 2: Tool Adapter Rewrite (Robustly interface with omo, omx, omc, kiro with retries)
 - [ ] Complete Phase 3: Graph Redesign (Fully align nodes and edges to the SOP checklist and human gates)
 - [ ] Complete Phase 4: Ruflo MCP Integration (Connect reasoning/feedback loop)
