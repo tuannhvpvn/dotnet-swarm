@@ -8,3 +8,5 @@ pyyaml
 requests
 loguru
 tenacity
+mcp
+langgraph-checkpoint-sqlite
