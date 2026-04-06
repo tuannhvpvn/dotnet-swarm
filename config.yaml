@@ -1,15 +1,43 @@
-migration_id: "mig-202604"
-default_phase: 1
-timeout_minutes: 30
+migration:
+  id: "mig-202604"
+  target_framework: "net10.0"
+  strategy: "lift-and-shift"
+  nullable: "disable"
+  implicit_usings: "disable"
+
+safety:
+  config_file: "config/safety.yaml"
+
+tools:
+  config_file: "app/tools/config.yaml"
 
 vibekanban:
   enabled: true
   url: "http://localhost:3000/api/mcp"
 
-ruflo_mcp_url: "http://localhost:3131"
-ruflo_port: 3131
+ruflo:
+  enabled: true
+  mcp_url: "http://localhost:3131"
+  fallback_to_static: true
 
 gitnexus:
   enabled: true
   mcp_url: "http://localhost:4000/mcp"
   index_on_start: true
+
+git:
+  branch_format: "migration/v1-{project_name}"
+  commit_format: "forge({agent}): {title} [{task_id}]"
+  use_worktree: true
+  auto_push: false
+  create_pr: true
+  pr_target_branch: "develop"
+
+session:
+  auto_save_interval: 60
+  resume_on_start: true
+
+logging:
+  level: "DEBUG"
+  rotation: "10 MB"
+  retention: "30 days"

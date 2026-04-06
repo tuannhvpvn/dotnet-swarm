@@ -416,3 +416,12 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Migration Swarm runtime artifacts
+state/
+.worktrees/
+*.db
+*.db-journal
+*.db-wal
+__pycache__/
+.env
