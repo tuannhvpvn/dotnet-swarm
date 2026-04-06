@@ -1,6 +1,6 @@
 # Roadmap: dotnet-swarm
 
-**8 phases** | **40 requirements mapped** | All v1 requirements covered ✓
+**9 phases** | **40 requirements mapped** | All v1 requirements covered ✓
 
 | # | Phase | Goal | Requirements | Success Criteria |
 |---|-------|------|--------------|------------------|
@@ -12,6 +12,7 @@
 | 6 | Migration Skills | Define standard `.NET` modernization payload | Complete    | 2026-04-06 |
 | 7 | SOP Compliance | Implement algorithmic checklist validation | Complete    | 2026-04-06 |
 | 8 | Polish & Integration | Ship CLI, dashboard, and integration tests | Complete    | 2026-04-06 |
+| 9 | Audit Housekeeping | Close doc/tracking debt from v1.0 audit | HOK-01..04 | Pending |
 
 ## Phase Details
 
@@ -73,3 +74,13 @@
 1. Typer CLI commands `start`, `resume`, `approve` work end-to-end.
 2. Streamlit Dashboard displays `status` live metrics.
 3. Complete critical integration paths test coverage.
+
+### Phase 9: Audit Housekeeping
+**Goal:** Close all doc and tracking debt flagged by the v1.0 milestone audit before archiving
+**Requirements:** HOK-01, HOK-02, HOK-03, HOK-04
+**Gap Closure:** Closes gaps from v1.0-MILESTONE-AUDIT.md (tech_debt status)
+**Success criteria:**
+1. All 12 stale unchecked requirement checkboxes updated to `[x]`.
+2. VERIFICATION.md stubs created for phases 07 and 08.
+3. Phase 03 (tool-adapter) has `nyquist_compliant: true` VALIDATION.md.
+4. Re-audit passes with `status: passed`.

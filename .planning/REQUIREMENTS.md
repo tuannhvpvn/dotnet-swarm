@@ -45,13 +45,13 @@
 ### Migration Skills
 
 - [x] **SKL-01**: Write `.migration-skills/dotnet-controller-migration/SKILL.md`
-- [ ] **SKL-02**: Write `.migration-skills/dotnet-webconfig-to-appsettings/SKILL.md`
-- [ ] **SKL-03**: Write `.migration-skills/dotnet-startup-migration/SKILL.md`
-- [ ] **SKL-04**: Write `.migration-skills/dotnet-auth-middleware/SKILL.md`
-- [ ] **SKL-05**: Write `.migration-skills/dotnet-namespace-replacement/SKILL.md`
-- [ ] **SKL-06**: Write `.migration-skills/dotnet-logging-adapter/SKILL.md`
-- [ ] **SKL-07**: Write `.migration-skills/dotnet-docker-setup/SKILL.md`
-- [ ] **SKL-08**: Write `.migration-skills/dotnet-nuget-mapping/SKILL.md`
+- [x] **SKL-02**: Write `.migration-skills/dotnet-webconfig-to-appsettings/SKILL.md`
+- [x] **SKL-03**: Write `.migration-skills/dotnet-startup-migration/SKILL.md`
+- [x] **SKL-04**: Write `.migration-skills/dotnet-auth-middleware/SKILL.md`
+- [x] **SKL-05**: Write `.migration-skills/dotnet-namespace-replacement/SKILL.md`
+- [x] **SKL-06**: Write `.migration-skills/dotnet-logging-adapter/SKILL.md`
+- [x] **SKL-07**: Write `.migration-skills/dotnet-docker-setup/SKILL.md`
+- [x] **SKL-08**: Write `.migration-skills/dotnet-nuget-mapping/SKILL.md`
 - [x] **SKL-09**: Update `sync_skills.py` to copy all new skills
 
 ### SOP Compliance
@@ -63,11 +63,18 @@
 ### Polish & Integration
 
 - [x] **POL-01**: Update Typer CLI `main.py` entry point with resume/status/approve commands
-- [ ] **POL-02**: Render task-level progress and metrics on Streamlit `dashboard.py`
-- [ ] **POL-03**: Unify configurations into a standard `config.yaml` schema
-- [ ] **POL-04**: Create comprehensive integration test suite
-- [ ] **POL-05**: Cleanup project `.gitignore`
+- [x] **POL-02**: Render task-level progress and metrics on Streamlit `dashboard.py`
+- [x] **POL-03**: Unify configurations into a standard `config.yaml` schema
+- [x] **POL-04**: Create comprehensive integration test suite
+- [x] **POL-05**: Cleanup project `.gitignore`
 - [x] **POL-06**: Update project documentation (SOP.md, TASK-ROUTING.md, TROUBLESHOOTING.md)
+
+### Audit Housekeeping (v1.0 Gap Closure)
+
+- [ ] **HOK-01**: Fix 12 stale unchecked boxes in REQUIREMENTS.md traceability
+- [ ] **HOK-02**: Create VERIFICATION.md stubs for phases 07 and 08
+- [ ] **HOK-03**: Run `/gsd-validate-phase 3` — create 03-VALIDATION.md with `nyquist_compliant: true`
+- [ ] **HOK-04**: Re-run `/gsd-audit-milestone` and confirm `status: passed`
 
 ## v2 Requirements
 
@@ -123,15 +130,19 @@
 | SOP-02 | Phase 7 | Complete |
 | SOP-03 | Phase 7 | Complete |
 | POL-01 | Phase 8 | Complete |
-| POL-02 | Phase 8 | Pending |
-| POL-03 | Phase 8 | Pending |
-| POL-04 | Phase 8 | Pending |
-| POL-05 | Phase 8 | Pending |
+| POL-02 | Phase 8 | Complete |
+| POL-03 | Phase 8 | Complete |
+| POL-04 | Phase 8 | Complete |
+| POL-05 | Phase 8 | Complete |
 | POL-06 | Phase 8 | Complete |
+| HOK-01 | Phase 9 | Pending |
+| HOK-02 | Phase 9 | Pending |
+| HOK-03 | Phase 9 | Pending |
+| HOK-04 | Phase 9 | Pending |
 
 **Coverage:**
-- v1 requirements: 40 total
-- Mapped to phases: 40
+- v1 requirements: 44 total (40 original + 4 HOK)
+- Mapped to phases: 44
 - Unmapped: 0 ✓
 
 ---
