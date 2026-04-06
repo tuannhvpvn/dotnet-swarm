@@ -7,9 +7,9 @@
 
 ### Foundation
 
-- [ ] **FND-01**: Redesign `MigrationState` model to support all task and error tracking fields
-- [ ] **FND-02**: Upgrade SQLite persistence schema to match new state model
-- [ ] **FND-03**: Deduplicate and consolidate `auto_skill_creator` logic
+- [x] **FND-01**: Redesign `MigrationState` model to support all task and error tracking fields
+- [x] **FND-02**: Upgrade SQLite persistence schema to match new state model
+- [x] **FND-03**: Deduplicate and consolidate `auto_skill_creator` logic
 
 ### Safety Layer
 
@@ -88,9 +88,9 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FND-01 | Phase 1 | Pending |
-| FND-02 | Phase 1 | Pending |
-| FND-03 | Phase 1 | Pending |
+| FND-01 | Phase 1 | Complete |
+| FND-02 | Phase 1 | Complete |
+| FND-03 | Phase 1 | Complete |
 | SFE-01 | Phase 2 | Pending |
 | SFE-02 | Phase 2 | Pending |
 | SFE-03 | Phase 2 | Pending |
