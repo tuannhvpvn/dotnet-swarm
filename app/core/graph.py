@@ -37,7 +37,7 @@ def route_after_validate(state: MigrationState) -> str:
     
     return "documenter"
 
-def build_migration_graph(persistence=None):
+def build_migration_graph(persistence=None, checkpointer=None):
     workflow = StateGraph(MigrationState)
     
     # 1. Modular Nodes
@@ -74,9 +74,10 @@ def build_migration_graph(persistence=None):
     workflow.add_edge("documenter", END)
 
     # 3. LangGraph Native Checkpointer (Dual-Write strategy vs MigrationPersistence)
-    db_path = Path(settings.solution_path) / "state" / "langgraph_state.sqlite"
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    checkpointer = SqliteSaver.from_conn_string(str(db_path))
+    # Caller provides the checkpointer (e.g. SqliteSaver context) or falls back to InMemory
+    if checkpointer is None:
+        from langgraph.checkpoint.memory import MemorySaver
+        checkpointer = MemorySaver()
 
     return workflow.compile(checkpointer=checkpointer, interrupt_before=["human_gate"])
 
@@ -85,23 +86,27 @@ def run_migration(solution_path: str, start_phase: int = 1, persistence=None):
         migration_id=settings.migration_id, 
         solution_path=str(Path(solution_path).resolve())
     )
-    graph = build_migration_graph(persistence)
     logger.info(f"🚀 Migration Swarm ID: {state.migration_id}")
     
-    config = {"configurable": {"thread_id": state.migration_id}}
-    
-    # Main run loop
-    for event in graph.stream(state, config, stream_mode="values"):
-        if persistence:
-            persistence.save(event) # Dual-write explicitly
-            
-    snapshot = graph.get_state(config)
-    # Handle the interrupt_before hook natively
-    if snapshot.next and "human_gate" in snapshot.next:
-        if input("Approve Execution Plan? (y/n): ").lower() == "y":
-            for event in graph.stream(None, config, stream_mode="values"):
-                if persistence:
-                    persistence.save(event)
+    db_path = Path(solution_path) / "state" / "langgraph_state.sqlite"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with SqliteSaver.from_conn_string(str(db_path)) as checkpointer:
+        graph = build_migration_graph(persistence=persistence, checkpointer=checkpointer)
+        config = {"configurable": {"thread_id": state.migration_id}}
+        
+        # Main run loop
+        for event in graph.stream(state, config, stream_mode="values"):
+            if persistence:
+                persistence.save(event) # Dual-write explicitly
+                
+        snapshot = graph.get_state(config)
+        # Handle the interrupt_before hook natively
+        if snapshot.next and "human_gate" in snapshot.next:
+            if input("Approve Execution Plan? (y/n): ").lower() == "y":
+                for event in graph.stream(None, config, stream_mode="values"):
+                    if persistence:
+                        persistence.save(event)
 
     logger.success("🎉 Migration Loop terminated (Completed or Paused)!")
     return snapshot.values
