@@ -44,7 +44,7 @@
 
 ### Migration Skills
 
-- [ ] **SKL-01**: Write `.migration-skills/dotnet-controller-migration/SKILL.md`
+- [x] **SKL-01**: Write `.migration-skills/dotnet-controller-migration/SKILL.md`
 - [ ] **SKL-02**: Write `.migration-skills/dotnet-webconfig-to-appsettings/SKILL.md`
 - [ ] **SKL-03**: Write `.migration-skills/dotnet-startup-migration/SKILL.md`
 - [ ] **SKL-04**: Write `.migration-skills/dotnet-auth-middleware/SKILL.md`
@@ -52,7 +52,7 @@
 - [ ] **SKL-06**: Write `.migration-skills/dotnet-logging-adapter/SKILL.md`
 - [ ] **SKL-07**: Write `.migration-skills/dotnet-docker-setup/SKILL.md`
 - [ ] **SKL-08**: Write `.migration-skills/dotnet-nuget-mapping/SKILL.md`
-- [ ] **SKL-09**: Update `sync_skills.py` to copy all new skills
+- [x] **SKL-09**: Update `sync_skills.py` to copy all new skills
 
 ### SOP Compliance
 
@@ -110,7 +110,7 @@
 | GRD-09 | Phase 4 | Complete |
 | MCP-01 | Phase 5 | Complete |
 | MCP-02 | Phase 5 | Complete |
-| SKL-01 | Phase 6 | Pending |
+| SKL-01 | Phase 6 | Complete |
 | SKL-02 | Phase 6 | Pending |
 | SKL-03 | Phase 6 | Pending |
 | SKL-04 | Phase 6 | Pending |
@@ -118,7 +118,7 @@
 | SKL-06 | Phase 6 | Pending |
 | SKL-07 | Phase 6 | Pending |
 | SKL-08 | Phase 6 | Pending |
-| SKL-09 | Phase 6 | Pending |
+| SKL-09 | Phase 6 | Complete |
 | SOP-01 | Phase 7 | Pending |
 | SOP-02 | Phase 7 | Pending |
 | SOP-03 | Phase 7 | Pending |

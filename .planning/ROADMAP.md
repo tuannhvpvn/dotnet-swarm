@@ -9,7 +9,7 @@
 | 3 | Tool Adapter | Robust harness integrations with retry | Complete    | 2026-04-06 |
 | 4 | Graph Redesign | Complete SOP-aligned node definitions | Complete    | 2026-04-06 |
 | 5 | Ruflo MCP | Integrate SONA feedback system via MCP | Complete    | 2026-04-06 |
-| 6 | Migration Skills | Define standard `.NET` modernization payload | SKL-01 to SKL-09 | 2 |
+| 6 | Migration Skills | Define standard `.NET` modernization payload | Complete    | 2026-04-06 |
 | 7 | SOP Compliance | Implement algorithmic checklist validation | SOP-01, SOP-02, SOP-03 | 2 |
 | 8 | Polish & Integration | Ship CLI, dashboard, and integration tests | POL-01 to POL-06 | 3 |
 
