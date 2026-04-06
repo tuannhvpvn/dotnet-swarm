@@ -62,12 +62,12 @@
 
 ### Polish & Integration
 
-- [ ] **POL-01**: Update Typer CLI `main.py` entry point with resume/status/approve commands
+- [x] **POL-01**: Update Typer CLI `main.py` entry point with resume/status/approve commands
 - [ ] **POL-02**: Render task-level progress and metrics on Streamlit `dashboard.py`
 - [ ] **POL-03**: Unify configurations into a standard `config.yaml` schema
 - [ ] **POL-04**: Create comprehensive integration test suite
 - [ ] **POL-05**: Cleanup project `.gitignore`
-- [ ] **POL-06**: Update project documentation (SOP.md, TASK-ROUTING.md, TROUBLESHOOTING.md)
+- [x] **POL-06**: Update project documentation (SOP.md, TASK-ROUTING.md, TROUBLESHOOTING.md)
 
 ## v2 Requirements
 
@@ -122,12 +122,12 @@
 | SOP-01 | Phase 7 | Complete |
 | SOP-02 | Phase 7 | Complete |
 | SOP-03 | Phase 7 | Complete |
-| POL-01 | Phase 8 | Pending |
+| POL-01 | Phase 8 | Complete |
 | POL-02 | Phase 8 | Pending |
 | POL-03 | Phase 8 | Pending |
 | POL-04 | Phase 8 | Pending |
 | POL-05 | Phase 8 | Pending |
-| POL-06 | Phase 8 | Pending |
+| POL-06 | Phase 8 | Complete |
 
 **Coverage:**
 - v1 requirements: 40 total
