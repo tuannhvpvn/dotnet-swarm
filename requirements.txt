@@ -1,0 +1,10 @@
+langgraph
+langchain
+pydantic
+pydantic-settings
+rich
+typer
+pyyaml
+requests
+loguru
+tenacity

@@ -1,0 +1,15 @@
+migration_id: "mig-202604"
+default_phase: 1
+timeout_minutes: 30
+
+vibekanban:
+  enabled: true
+  url: "http://localhost:3000/api/mcp"
+
+ruflo_mcp_url: "http://localhost:3131"
+ruflo_port: 3131
+
+gitnexus:
+  enabled: true
+  mcp_url: "http://localhost:4000/mcp"
+  index_on_start: true
