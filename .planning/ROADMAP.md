@@ -7,7 +7,7 @@
 | 1 | Foundation | Redesign State and Persistence schema | Complete    | 2026-04-06 |
 | 2 | Safety Layer | Implement absolute rules enforcer | Complete    | 2026-04-06 |
 | 3 | Tool Adapter | Robust harness integrations with retry | Complete    | 2026-04-06 |
-| 4 | Graph Redesign | Complete SOP-aligned node definitions | GRD-01 to GRD-09 | 4 |
+| 4 | Graph Redesign | Complete SOP-aligned node definitions | Complete    | 2026-04-06 |
 | 5 | Ruflo MCP | Integrate SONA feedback system via MCP | MCP-01, MCP-02 | 1 |
 | 6 | Migration Skills | Define standard `.NET` modernization payload | SKL-01 to SKL-09 | 2 |
 | 7 | SOP Compliance | Implement algorithmic checklist validation | SOP-01, SOP-02, SOP-03 | 2 |
