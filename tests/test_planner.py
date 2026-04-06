@@ -5,7 +5,7 @@ import pytest
 def test_planner_node_returns_state():
     """Planner node should return state dict or MigrationState when given minimal input."""
     try:
-        from app.agents.planner import planner_node
+        from app.agents.planner import plan_node as planner_node
         from app.core.state import MigrationState
         state = MigrationState(
             migration_id="planner-test",
