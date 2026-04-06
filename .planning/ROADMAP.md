@@ -5,7 +5,7 @@
 | # | Phase | Goal | Requirements | Success Criteria |
 |---|-------|------|--------------|------------------|
 | 1 | Foundation | Redesign State and Persistence schema | Complete    | 2026-04-06 |
-| 2 | Safety Layer | Implement absolute rules enforcer | SFE-01, SFE-02, SFE-03 | 2 |
+| 2 | Safety Layer | Implement absolute rules enforcer | Complete    | 2026-04-06 |
 | 3 | Tool Adapter | Robust harness integrations with retry | TAD-01, TAD-02, TAD-03, TAD-04, TAD-05 | 3 |
 | 4 | Graph Redesign | Complete SOP-aligned node definitions | GRD-01 to GRD-09 | 4 |
 | 5 | Ruflo MCP | Integrate SONA feedback system via MCP | MCP-01, MCP-02 | 1 |

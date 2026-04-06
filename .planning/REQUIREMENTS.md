@@ -13,9 +13,9 @@
 
 ### Safety Layer
 
-- [ ] **SFE-01**: Implement `SafetyRules` enforcer for file paths, content, SQL, and Git branches
-- [ ] **SFE-02**: Define configurable absolute safety rules and blacklists in `config/safety.yaml`
-- [ ] **SFE-03**: Integrate safety checks into Tool Adapter execution and pre-commit steps
+- [x] **SFE-01**: Implement `SafetyRules` enforcer for file paths, content, SQL, and Git branches
+- [x] **SFE-02**: Define configurable absolute safety rules and blacklists in `config/safety.yaml`
+- [x] **SFE-03**: Integrate safety checks into Tool Adapter execution and pre-commit steps
 
 ### Tool Adapter
 
@@ -91,9 +91,9 @@
 | FND-01 | Phase 1 | Complete |
 | FND-02 | Phase 1 | Complete |
 | FND-03 | Phase 1 | Complete |
-| SFE-01 | Phase 2 | Pending |
-| SFE-02 | Phase 2 | Pending |
-| SFE-03 | Phase 2 | Pending |
+| SFE-01 | Phase 2 | Complete |
+| SFE-02 | Phase 2 | Complete |
+| SFE-03 | Phase 2 | Complete |
 | TAD-01 | Phase 3 | Pending |
 | TAD-02 | Phase 3 | Pending |
 | TAD-03 | Phase 3 | Pending |
