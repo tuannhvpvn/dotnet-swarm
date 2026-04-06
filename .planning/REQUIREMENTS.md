@@ -39,8 +39,8 @@
 
 ### Ruflo MCP Integration
 
-- [ ] **MCP-01**: Create proper MCP adapter `RufloMCPClient` in Python
-- [ ] **MCP-02**: Automate `ruflo mcp start` background initiation via the `ruflo_start.py` bootloader
+- [x] **MCP-01**: Create proper MCP adapter `RufloMCPClient` in Python
+- [x] **MCP-02**: Automate `ruflo mcp start` background initiation via the `ruflo_start.py` bootloader
 
 ### Migration Skills
 
@@ -108,8 +108,8 @@
 | GRD-07 | Phase 4 | Pending |
 | GRD-08 | Phase 4 | Pending |
 | GRD-09 | Phase 4 | Complete |
-| MCP-01 | Phase 5 | Pending |
-| MCP-02 | Phase 5 | Pending |
+| MCP-01 | Phase 5 | Complete |
+| MCP-02 | Phase 5 | Complete |
 | SKL-01 | Phase 6 | Pending |
 | SKL-02 | Phase 6 | Pending |
 | SKL-03 | Phase 6 | Pending |
