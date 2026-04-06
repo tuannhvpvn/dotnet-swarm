@@ -20,9 +20,10 @@ Reliable, safe, and autonomous migration of .NET applications without risking pr
 - ✓ Complete Phase 2: Safety Layer (Pre-flight checks to prevent unwanted destructive actions) — Validated in Phase 2: Safety Layer
 - ✓ Complete Phase 3: Tool Adapter Rewrite (Robustly interface with omo, omx, omc, kiro with retries) — Validated in Phase 3: Tool Adapter
 - ✓ Complete Phase 4: Graph Redesign (Fully align nodes and edges to the SOP checklist and human gates) — Validated in Phase 4: Graph Redesign
+- ✓ Complete Phase 5: Ruflo MCP Integration (Connect reasoning/feedback loop) — Validated in Phase 5: Ruflo MCP
 
 ### Active
-- [ ] Complete Phase 5: Migration Skills (Package `.migration-skills/` payload)
+- [ ] Complete Phase 6: Migration Skills (Package `.migration-skills/` payload)
 - [ ] Complete Phase 6: SOP Compliance Layer (Checklist enforcers and precise reporting)
 - [ ] Complete Phase 7: Polish & Integration (Dashboard updates, comprehensive test suite)
 

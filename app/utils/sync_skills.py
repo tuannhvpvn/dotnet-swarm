@@ -13,6 +13,14 @@ SKILLS = [
     "dotnet-msal-update",
     "dotnet-clean-arch-cqrs",
     "dotnet-ddd-value-objects",
+    "dotnet-controller-migration",
+    "dotnet-webconfig-to-appsettings",
+    "dotnet-startup-migration",
+    "dotnet-auth-middleware",
+    "dotnet-namespace-replacement",
+    "dotnet-logging-adapter",
+    "dotnet-docker-setup",
+    "dotnet-nuget-mapping",
 ]
 
 @app.command()
