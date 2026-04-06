@@ -1,5 +1,5 @@
 from app.core.state import MigrationState
-from app.tools.adapter import call_harness
+from app.core.harness_adapter import harness
 from app.integrations.vibekanban_adapter import vibekanban
 from app.integrations.gitnexus_adapter import gitnexus
 from rich.console import Console
@@ -22,10 +22,7 @@ def surveyor_node(state: MigrationState) -> MigrationState:
         "task": "Scan multi-solution, dependency graph, Oracle, EF6, MSAL, breaking changes",
         "worktree": state.solution_path
     }
-    result = call_harness(task_spec)
-
-    state.phase_progress["survey"] = 100.0
-    state.completed_tasks.append({"task_id": "survey-001", "status": "completed"})
+    result = harness.execute(task_spec, state)
 
     vibekanban.update_agent("Surveyor", "✅ Completed", progress=100.0)
     console.print("[green]✅ Survey hoàn tất[/]")

@@ -1,5 +1,5 @@
 from app.core.state import MigrationState
-from app.tools.adapter import call_harness
+from app.core.harness_adapter import harness
 from app.utils.worktree import create_worktree
 from app.integrations.vibekanban_adapter import vibekanban
 from rich.console import Console
@@ -11,7 +11,7 @@ def phase1_migrator_node(state: MigrationState) -> MigrationState:
     console.print("[bold yellow]🔄 Phase1 Migrator (Lift & Shift) đang chạy...[/]")
 
     worktree = create_worktree(state.solution_path, "phase1")
-    state.git_worktree = worktree
+    state.worktree_path = worktree
 
     task_spec = {
         "harness": "omx",
@@ -20,10 +20,7 @@ def phase1_migrator_node(state: MigrationState) -> MigrationState:
         "task": "Lift-and-shift sang .NET 10, giữ nguyên kiến trúc cũ, chỉ thay csproj/packages",
         "worktree": worktree
     }
-    result = call_harness(task_spec)
-
-    state.phase_progress["phase1"] = 70.0
-    state.completed_tasks.append({"task_id": "phase1-001", "status": "completed"})
+    result = harness.execute(task_spec, state)
 
     vibekanban.update_agent("Phase1 Migrator", "✅ Completed", progress=100.0)
     console.print("[green]✅ Phase 1 Lift & Shift hoàn tất[/]")

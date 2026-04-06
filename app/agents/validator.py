@@ -1,5 +1,5 @@
 from app.core.state import MigrationState
-from app.tools.adapter import call_harness
+from app.core.harness_adapter import harness
 from app.core.ruflo_mcp import ruflo_client
 from app.core.auto_skill_creator import auto_skill_creator
 from app.integrations.vibekanban_adapter import vibekanban
@@ -12,7 +12,7 @@ def validator_node(state: MigrationState) -> MigrationState:
     vibekanban.update_agent("Validator", "🟢 Running", progress=50)
     console.print("[bold cyan]✅ Validator & Self-Healing đang chạy...[/]")
 
-    worktree = state.git_worktree or state.solution_path
+    worktree = state.worktree_path or state.solution_path
     task_spec = {
         "harness": "omo",
         "model": "glm-5",
@@ -20,10 +20,9 @@ def validator_node(state: MigrationState) -> MigrationState:
         "task": "dotnet build --no-incremental && dotnet test",
         "worktree": worktree
     }
-    result = call_harness(task_spec)
+    result = harness.execute(task_spec, state)
 
     if result["returncode"] == 0:
-        state.completed_tasks.append({"task_id": f"validate-{state.migration_id}", "status": "passed"})
         vibekanban.update_agent("Validator", "✅ Completed", progress=100.0)
     else:
         error = result["stderr"][:800]

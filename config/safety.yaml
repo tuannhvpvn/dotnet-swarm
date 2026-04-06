@@ -1,0 +1,57 @@
+absolute_rules:
+  - id: SAFE-001
+    rule: "NEVER execute SQL write operations"
+    severity: critical
+  - id: SAFE-002
+    rule: "NEVER modify blacklisted files or folders"
+    severity: critical
+  - id: SAFE-003
+    rule: "NEVER commit to protected branches"
+    severity: critical
+  - id: SAFE-004
+    rule: "NEVER embed credentials in source code"
+    severity: critical
+  - id: SAFE-005
+    rule: "NEVER modify files outside the worktree"
+    severity: critical
+  - id: SAFE-006
+    rule: "NEVER execute arbitrary shell commands from LLM output"
+    severity: critical
+  - id: SAFE-007
+    rule: "ALWAYS validate harness output before applying"
+    severity: warning
+
+blacklist:
+  folders:
+    - "**/keys/"
+    - "**/certs/"
+    - "**/pgp/"
+    - "**/ssl/"
+    - "**/.vs/"
+  files:
+    - "*.pfx"
+    - "*.pem"
+    - "*.key"
+    - "*.p12"
+    - "*.cer"
+    - "*.pgp"
+    - "*.snk"
+  content_patterns:
+    - "password="
+    - "BEGIN RSA PRIVATE KEY"
+    - "BEGIN PRIVATE KEY"
+    - "connectionString="
+
+git_safety:
+  protected_branches:
+    - "main"
+    - "master"
+    - "production"
+
+forbidden_sql:
+  - "INSERT"
+  - "UPDATE"
+  - "DELETE"
+  - "DROP"
+  - "TRUNCATE"
+  - "ALTER"
