@@ -6,6 +6,15 @@ A Queen-led autonomous agent swarm for automating .NET codebase migrations. It u
 
 **Shipped v1.0** — Production-ready migration orchestrator with 128 automated tests and Nyquist-compliant validation across all 9 phases.
 
+## Current Milestone: v2.0 Core Advancements
+
+**Goal:** Implement recursive .csproj target framework upgrade support first, followed by establishing the groundwork for SONA auto-skill generation.
+
+**Target features:**
+- ADV-01: Recursive `.csproj` target framework upgrade support
+- GRD-08: `learn_node` — SONA pattern feedback and auto-skill generation from migration history
+
+
 ## Core Value
 
 Reliable, safe, and autonomous migration of .NET applications without risking production side-effects or hallucinated codebase states, ensuring all steps are verifiable and SOP compliant.
@@ -25,8 +34,8 @@ Reliable, safe, and autonomous migration of .NET applications without risking pr
 
 ### Active (v2.0)
 
+- [ ] **ADV-01**: Recursive `.csproj` target framework upgrade support (Priority)
 - [ ] **GRD-08**: `learn_node` — SONA pattern feedback and auto-skill generation from migration history
-- [ ] **ADV-01**: Recursive `.csproj` target framework upgrade support
 - [ ] Real harness integration testing (requires omo/omx/omc/kiro installed in CI environment)
 
 ### Out of Scope
@@ -61,5 +70,22 @@ Reliable, safe, and autonomous migration of .NET applications without risking pr
 | Fail-open git verification in post_task_check | CI pipelines don't have git context; must not block | ✓ Good — orchestrator stays operational in non-git environments |
 | Nyquist validation for all phases | Ensure test feedback latency < 5s per task, prevent drift | ✓ Good — caught 20+ real gaps across phases 03..08 |
 
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
 ---
-*Last updated: 2026-04-06 after v1.0 milestone completion*
+*Last updated: 2026-04-07 after starting v2.0 milestone*
