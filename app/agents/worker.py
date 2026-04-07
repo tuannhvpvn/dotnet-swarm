@@ -1,4 +1,5 @@
 import subprocess
+import xml.etree.ElementTree as ET
 from collections import Counter
 from datetime import datetime
 
@@ -8,6 +9,7 @@ from app.core.sop import SOPEnforcer
 from app.core.auto_skill_creator import AutoSkillCreator
 from app.tools.adapter import call_harness
 from app.utils.worktree import create_worktree
+from app.utils.csproj_resolver import resolve_from_entry, upgrade_solution
 from app.integrations.vibekanban_adapter import vibekanban
 from app.core.ruflo_mcp import ruflo_client
 from rich.console import Console
@@ -55,6 +57,58 @@ def _update_task_result(task: TaskItem, result: dict) -> None:
         task.error_message = result.get("stderr", "")[:500]
 
 
+def _preflight_csproj_upgrade(task: TaskItem, state: MigrationState) -> bool:
+    """
+    Pre-flight for csproj_upgrade tasks. Resolves graph + upgrades TargetFramework.
+    Returns True on success (task completed inline). On failure: hard-blocks state.
+    Caller should return state immediately if this returns False.
+    """
+    target_tf = "net10.0"  # default
+    for line in (task.description or "").splitlines():
+        if line.strip().startswith("target_tf="):
+            target_tf = line.strip().split("=", 1)[1].strip()
+            break
+
+    solution_path = state.worktree_path or state.solution_path
+    console.print(f"[bold blue]🔍 Pre-flight: resolving dependency graph from {solution_path}[/]")
+
+    try:
+        resolved = resolve_from_entry(solution_path)
+        state.resolved_csproj_paths = resolved
+        console.print(f"[bold blue]📦 Resolved {len(resolved)} project(s)[/]")
+
+        results = upgrade_solution(solution_path, target_tf)
+        upgraded = sum(1 for v in results.values() if v)
+        console.print(f"[bold green]✅ Upgraded {upgraded}/{len(results)} .csproj file(s) to {target_tf}[/]")
+        logger.success(f"csproj pre-flight: {upgraded} upgraded, target={target_tf}")
+
+        task.status = "completed"
+        task.completed_at = datetime.now()
+        task.logs.append(f"Pre-flight upgraded {upgraded}/{len(results)} projects to {target_tf}")
+        return True
+
+    except (ValueError, ET.ParseError) as exc:
+        # Hard block — SOP D-01: zero tolerance
+        msg = f"csproj_upgrade pre-flight hard-blocked: {exc}"
+        logger.error(msg)
+        task.status = "failed"
+        task.error_message = msg
+        state.workflow_state = "blocked"
+        state.blocked_reason = msg
+        console.print(f"[bold red]⛔ Hard Block: {msg}[/]")
+        return False
+
+    except OSError as exc:
+        msg = f"csproj_upgrade pre-flight: file not found — {exc}"
+        logger.error(msg)
+        task.status = "failed"
+        task.error_message = msg
+        state.workflow_state = "blocked"
+        state.blocked_reason = msg
+        console.print(f"[bold red]⛔ Hard Block: {msg}[/]")
+        return False
+
+
 # ── Nodes ─────────────────────────────────────────────────────────────────────
 
 def human_gate_node(state: MigrationState) -> MigrationState:
@@ -87,6 +141,12 @@ def migrate_task_node(state: MigrationState) -> MigrationState:
     pending_task.status = "in_progress"
     pending_task.started_at = datetime.now()
     pending_task.attempt_count += 1
+
+    # Pre-flight for csproj_upgrade tasks — deterministic XML resolution (no harness)
+    if pending_task.type == "csproj_upgrade":
+        if not _preflight_csproj_upgrade(pending_task, state):
+            return state  # hard-blocked — caller routes to human_gate
+        return state  # completed inline
 
     result = _execute_harness(_build_task_spec(pending_task, state), state)
     _update_task_result(pending_task, result)
