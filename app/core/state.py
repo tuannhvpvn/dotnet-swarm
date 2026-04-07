@@ -4,26 +4,48 @@ from typing import Literal, List, Dict, Any
 
 class TaskItem(BaseModel):
     id: str
+    phase: str = "phase1"                          # survey|phase1|phase2
+    type: str = "generic"                          # csproj_conversion|nuget_migration|controller_migration|...
     title: str
-    status: Literal["pending", "in_progress", "completed", "failed"] = "pending"
+    description: str = ""
+    status: Literal["pending", "in_progress", "completed", "failed", "skipped", "blocked", "escalated"] = "pending"
     logs: List[str] = Field(default_factory=list)
-    # SOP fields — required by SOPEnforcer pre_task_check (Phase 7)
+    # SOP fields — required by SOPEnforcer pre_task_check
     source_files: list[str] = Field(default_factory=list)
     target_files: list[str] = Field(default_factory=list)
     done_criteria: str | None = None
     verify_command: str | None = None
+    # Dependency & routing
+    tier: int = 0                                  # Dependency tier
+    depends_on: list[str] = Field(default_factory=list)  # Task IDs
+    harness: str = "omc"                           # omo|omc|omx|kiro
+    model_tier: str = "standard"                   # low|standard|high
+    command: str = "team"                          # autopilot|team|ralph|ultrawork
+    # Retry tracking
+    attempt_count: int = 0
+    max_attempts: int = 5
+    error_message: str | None = None
+    fix_history: list[dict] = Field(default_factory=list)
+    # Timestamps
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
 
 class BuildError(BaseModel):
     error_code: str
     file_path: str
     line_number: int | None = None
     message: str
+    category: str = "unknown"                      # missing_reference|missing_member|nuget|config|...
+    auto_fixable: bool = False
 
 class DebtItem(BaseModel):
     id: str
     description: str
+    file: str | None = None
+    severity: Literal["low", "medium", "high"] = "medium"
     phase: str
     resolved: bool = False
+    created_at: datetime = Field(default_factory=datetime.now)
 
 class MigrationState(BaseModel):
     migration_id: str
