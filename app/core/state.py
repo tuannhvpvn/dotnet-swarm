@@ -70,6 +70,7 @@ class MigrationState(BaseModel):
     reports: list[str] = Field(default_factory=list)
     safety_violations: list[dict] = Field(default_factory=list)
     worktree_path: str | None = None
+    resolved_csproj_paths: list[str] = Field(default_factory=list)
     session_id: str = ""
 
     error_log: List[Dict[str, Any]] = Field(default_factory=list)
