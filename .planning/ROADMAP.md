@@ -1,34 +1,41 @@
-# Roadmap: dotnet-swarm
+# Roadmap v2.0 Core Advancements
 
-## Milestones
+## Overview
 
-- ✅ **v1.0 Foundation & Migration Engine** — Phases 1–9 (shipped 2026-04-06)
+**2 phases** | **4 requirements mapped**
 
-## Phases
+| #  | Phase                                 | Goal                                                                                         | Requirements           | Success Criteria |
+|----|---------------------------------------|----------------------------------------------------------------------------------------------|------------------------|------------------|
+| 10 | Recursive `.csproj` Upgrade Engine    | Implement recursive discovery, parsing, and multi-project framework upgrading of `.NET` apps | ADV-01, ADV-02, ADV-03 | 3                |
+| 11 | `learn_node` & SONA Logging Framework | Introduce the `learn_node` to LangGraph for recording successful migration patterns          | GRD-08                 | 2                |
 
-<details>
-<summary>✅ v1.0 Foundation & Migration Engine (Phases 1–9) — SHIPPED 2026-04-06</summary>
+---
 
-- [x] Phase 1: Foundation (1/1 plan) — Redesigned MigrationState + dual-write SQLite/JSON persistence
-- [x] Phase 2: Safety Layer (1/1 plan) — SafetyRules enforcer + HarnessAdapter pre-flight/post-scan
-- [x] Phase 3: Tool Adapter (1/1 plan) — OOP harness factory for omo/omx/omc/kiro with tenacity retries
-- [x] Phase 4: Graph Redesign (1/1 plan) — LangGraph nodes aligned to SOP checklist + SqliteSaver
-- [x] Phase 5: Ruflo MCP (1/1 plan) — RufloMCPClient MCP adapter with graceful fallback
-- [x] Phase 6: Migration Skills (1/1 plan) — 13 SKILL.md payloads with strict AI constraint tags
-- [x] Phase 7: SOP Compliance (1/1 plan) — SOPEnforcer algorithmic gates + MigrationReporter
-- [x] Phase 8: Polish & Integration (1/1 plan) — CLI commands, dashboard, 128-test suite, docs
-- [x] Phase 9: Audit Housekeeping (1/1 plan) — Nyquist gap closure, REQUIREMENTS.md cleanup
+## Phase Details
 
-Full details: `.planning/milestones/v1.0-ROADMAP.md`
+### Phase 10: Recursive `.csproj` Upgrade Engine
 
-</details>
+**Goal:** Automate dependency-aware upgrades by recursing through ProjectReference elements to update entire solutions coherently.
 
-## ▶ Next Milestone
+**Requirements:**
+- **ADV-01**: Parse target `.sln` or `.csproj` to definitively resolve all internal project references in its dependency graph, recursively.
+- **ADV-02**: Update the `<TargetFramework>` tag for the entry project and all transitively referenced `.csproj` files to the target framework.
+- **ADV-03**: Successfully compile the root solution/project after the recursive upgrade to verify structural integrity.
 
-Run `/gsd-new-milestone` to define v2.0 requirements and roadmap.
+**Success criteria:**
+1. Given a root `.sln` or `.csproj` file, orchestrator can parse and return a complete list of valid local `<ProjectReference>` paths.
+2. Given a target `.NET` framework (e.g. `net8.0`), all correctly resolved `.csproj` files in the graph have their `<TargetFramework>` tags upgraded.
+3. The `validator_node` successfully runs `dotnet build` without runtime reference mismatch errors.
 
-**v2.0 candidates:**
-- `learn_node` / SONA auto-skill generation (GRD-08)
-- Recursive `.csproj` target framework upgrades (ADV-01)
-- Real harness integration test suite (requires omo/omx/omc/kiro in CI)
-- Ruflo npm package publishing
+---
+
+### Phase 11: `learn_node` & SONA Logging Framework
+
+**Goal:** Lay the foundation for autonomous skill generation by tracking successful interventions across state cycles.
+
+**Requirements:**
+- **GRD-08**: The orchestrator must include a scaffolded `learn_node` that executes after successful migration phases to persist a successful code modification pattern (SONA).
+
+**Success criteria:**
+1. A new `learn_node` is correctly integrated into the core `LangGraph` topology, reachable upon validation success.
+2. The node saves basic contextual data (e.g., node input/output diff signals, state metadata) to the execution history.

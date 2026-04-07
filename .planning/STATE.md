@@ -6,9 +6,9 @@ current_phase: Not started (defining requirements)
 status: defining_requirements
 last_updated: "2026-04-07T14:40:00.000Z"
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
-  total_plans: 0
+  total_plans: 2
   completed_plans: 0
 ---
 

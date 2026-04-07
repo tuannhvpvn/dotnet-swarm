@@ -24,4 +24,7 @@
 
 ## Traceability
 
-*(To be filled by roadmapper)*
+- **ADV-01** → Phase 10
+- **ADV-02** → Phase 10
+- **ADV-03** → Phase 10
+- **GRD-08** → Phase 11
