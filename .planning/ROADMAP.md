@@ -6,7 +6,7 @@
 
 | #  | Phase                                 | Goal                                                                                         | Requirements           | Success Criteria |
 |----|---------------------------------------|----------------------------------------------------------------------------------------------|------------------------|------------------|
-| 10 | Recursive `.csproj` Upgrade Engine    | Implement recursive discovery, parsing, and multi-project framework upgrading of `.NET` apps | ADV-01, ADV-02, ADV-03 | 3                |
+| 10 | Recursive `.csproj` Upgrade Engine    | Implement recursive discovery, parsing, and multi-project framework upgrading of `.NET` apps | Complete    | 2026-04-07 |
 | 11 | `learn_node` & SONA Logging Framework | Introduce the `learn_node` to LangGraph for recording successful migration patterns          | GRD-08                 | 2                |
 
 ---
