@@ -227,6 +227,23 @@ class TestUpgradeTargetFramework:
         with pytest.raises(ValueError, match="ToolsVersion"):
             upgrade_target_framework(str(proj), "net10.0")
 
+    def test_upgrades_multi_target_frameworks_tag(self, tmp_path):
+        """<TargetFrameworks> (plural) is upgraded to single target tf — Dimension 1."""
+        content = textwrap.dedent("""\
+            <Project Sdk=\"Microsoft.NET.Sdk\">
+              <PropertyGroup>
+                <TargetFrameworks>net6.0;net48</TargetFrameworks>
+              </PropertyGroup>
+            </Project>
+        """)
+        proj = tmp_path / "MultiTarget.csproj"
+        proj.write_text(content)
+        modified = upgrade_target_framework(str(proj), "net10.0")
+        assert modified is True
+        tree = ET.parse(str(proj))
+        tf = tree.getroot().find(".//TargetFrameworks")
+        assert tf is not None and tf.text == "net10.0"
+
 
 # ── upgrade_solution ──────────────────────────────────────────────────────────
 
@@ -249,3 +266,112 @@ class TestUpgradeSolution:
         make_csproj(str(proj), tf="net10.0")
         results = upgrade_solution(str(proj), "net10.0")
         assert results[str(proj)] is False
+
+
+# ── D3: SOP hard-block integration ──────────────────────────────────────────
+
+class TestPreflightCsprojUpgrade:
+    """
+    Dimension 3: Verify _preflight_csproj_upgrade hard-blocks state on failures.
+    Tests the SOP contract: ValueError/ET.ParseError → workflow_state="blocked".
+    """
+
+    def _make_task(self, description: str = "") -> object:
+        """Build a minimal TaskItem-like object for testing."""
+        from app.core.state import TaskItem
+        return TaskItem(
+            id="t-test",
+            title="Test csproj upgrade",
+            type="csproj_upgrade",
+            description=description,
+        )
+
+    def _make_state(self, solution_path: str) -> object:
+        """Build a minimal MigrationState for testing."""
+        from app.core.state import MigrationState
+        return MigrationState(migration_id="test-123", solution_path=solution_path)
+
+    def _call_preflight(self, task, state):
+        """Load _preflight_csproj_upgrade with transitive mcp deps stubbed out."""
+        import sys
+        import types
+        import importlib.util
+        import pathlib
+
+        # Stub out missing optional deps so worker.py module-level imports succeed
+        for mod_name in [
+            "mcp", "mcp.client", "mcp.client.stdio",
+            "app.integrations.vibekanban_adapter",
+            "app.core.ruflo_mcp",
+            "app.core.harness_adapter",
+            "app.tools.adapter",
+            "app.core.auto_skill_creator",
+            "app.core.sop",
+        ]:
+            if mod_name not in sys.modules:
+                stub = types.ModuleType(mod_name)
+                # Provide common attributes workers depend on at import time
+                stub.ruflo_client = None  # type: ignore[attr-defined]
+                stub.vibekanban = None  # type: ignore[attr-defined]
+                stub.harness = None  # type: ignore[attr-defined]
+                stub.call_harness = None  # type: ignore[attr-defined]
+                stub.SOPEnforcer = None  # type: ignore[attr-defined]
+                stub.AutoSkillCreator = None  # type: ignore[attr-defined]
+                stub.StdioServerParameters = None  # type: ignore[attr-defined]
+                stub.ClientSession = None  # type: ignore[attr-defined]
+                sys.modules[mod_name] = stub
+
+        worker_path = str(
+            pathlib.Path(__file__).parent.parent.parent / "app" / "agents" / "worker.py"
+        )
+        spec = importlib.util.spec_from_file_location("worker_isolated", worker_path)
+        mod = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
+        spec.loader.exec_module(mod)  # type: ignore[union-attr]
+        return mod._preflight_csproj_upgrade(task, state)
+
+    def test_hardblock_on_legacy_csproj(self, tmp_path):
+        """D3: ValueError (legacy ToolsVersion) must set workflow_state=blocked."""
+        proj = tmp_path / "Legacy.csproj"
+        make_legacy_csproj(str(proj))
+        task = self._make_task()
+        state = self._make_state(str(proj))
+        result = self._call_preflight(task, state)
+        assert result is False
+        assert state.workflow_state == "blocked"
+        assert state.blocked_reason is not None
+        assert "ToolsVersion" in state.blocked_reason
+        assert task.status == "failed"
+
+    def test_hardblock_on_corrupt_xml(self, tmp_path):
+        """D3: ET.ParseError (corrupt XML) must set workflow_state=blocked."""
+        proj = tmp_path / "Corrupt.csproj"
+        proj.write_text("<<not valid xml>>")
+        task = self._make_task()
+        state = self._make_state(str(proj))
+        result = self._call_preflight(task, state)
+        assert result is False
+        assert state.workflow_state == "blocked"
+        assert task.status == "failed"
+
+    def test_hardblock_on_missing_solution(self, tmp_path):
+        """D3: OSError (missing path) must set workflow_state=blocked."""
+        task = self._make_task()
+        state = self._make_state(str(tmp_path / "nonexistent.csproj"))
+        result = self._call_preflight(task, state)
+        assert result is False
+        assert state.workflow_state == "blocked"
+        assert task.status == "failed"
+
+    def test_preflight_success_sets_resolved_paths(self, tmp_path):
+        """D5: On success, state.resolved_csproj_paths is populated."""
+        b = tmp_path / "B" / "B.csproj"
+        a = tmp_path / "A" / "A.csproj"
+        make_csproj(str(b), tf="net6.0")
+        make_csproj(str(a), tf="net6.0", refs=["../B/B.csproj"])
+        task = self._make_task("target_tf=net10.0")
+        state = self._make_state(str(a))
+        result = self._call_preflight(task, state)
+        assert result is True
+        assert state.workflow_state == "normal"
+        assert len(state.resolved_csproj_paths) == 2
+        assert task.status == "completed"
