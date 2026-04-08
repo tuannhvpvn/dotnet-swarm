@@ -34,8 +34,8 @@ START → supervisor → planner → worker (migrate_task_node loop)
 
 | Phase | Goal | Harness | Model |
 |---|---|---|---|
-| Phase 1 — Lift & Shift | Upgrade `.csproj`, packages, syntax to .NET 10 | `omx team` | `claude-4.6-sonnet` |
-| Phase 2 — Modernize | Refactor to Clean Architecture + DDD + CQRS | `omc team` | `claude-4.6-opus` |
+| Phase 1 — Lift & Shift | Upgrade `.csproj`, packages, syntax to .NET 10 | `omx` (`omx exec`) | `claude-sonnet-4-6` |
+| Phase 2 — Modernize | Refactor to Clean Architecture + DDD + CQRS | `claude` (`claude -p`) | `claude-opus-4-6` |
 
 ---
 
