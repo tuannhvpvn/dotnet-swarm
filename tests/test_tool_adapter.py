@@ -2,11 +2,11 @@
 
 Verifies:
 - TAD-01: tenacity in requirements.txt
-- TAD-02: HarnessExecutor OOP structure with 4 concrete subclasses
+- TAD-02: HarnessExecutor OOP structure with concrete subclasses
 - TAD-02: call_harness() factory routes by harness key
 - TAD-03: retry logic appends error context to task on failure
 - TAD-04: sidecar context injection (_write_sidecar / _inject_context)
-- TAD-05: All 4 CLI keys (omo, omx, omc, kiro) are mapped
+- TAD-05: All CLI keys (opencode, omx, claude, kiro, gemini, aider, + legacy aliases) are mapped
 """
 from pathlib import Path
 from unittest.mock import patch, MagicMock
@@ -34,11 +34,12 @@ def test_harness_executor_base_class_exists():
 
 
 def test_four_concrete_harness_classes_exist():
-    """All 4 concrete harness classes must exist (TAD-02)."""
+    """All concrete harness classes must exist (TAD-02)."""
     from app.tools.adapter import (
-        OpenCodeHarness, ClaudeCodeHarness, CodexHarness, KiroHarness
+        OpenCodeHarness, ClaudeCodeHarness, CodexHarness, KiroHarness,
+        GeminiHarness, AiderHarness,
     )
-    for cls in [OpenCodeHarness, ClaudeCodeHarness, CodexHarness, KiroHarness]:
+    for cls in [OpenCodeHarness, ClaudeCodeHarness, CodexHarness, KiroHarness, GeminiHarness, AiderHarness]:
         assert issubclass(cls, __import__("app.tools.adapter", fromlist=["HarnessExecutor"]).HarnessExecutor), (
             f"{cls.__name__} must inherit from HarnessExecutor"
         )
@@ -52,20 +53,24 @@ def test_call_harness_factory_exists():
 
 # ── TAD-05: CLI key routing ───────────────────────────────────────────────────
 
-@pytest.mark.parametrize("harness_key,expected_cli", [
-    ("omo", "omo"),
-    ("omc", "omc"),
-    ("omx", "omx"),
-    ("kiro", "kiro"),
+@pytest.mark.parametrize("harness_key,expected_bin", [
+    # Canonical keys → correct binary as first argv element
+    ("opencode", "opencode"),
+    ("claude",   "claude"),
+    ("omx",      "omx"),
+    ("kiro",     "kiro-cli"),
+    ("gemini",   "gemini"),
+    ("aider",    "aider"),
+    # Legacy aliases must still route
+    ("omo",      "opencode"),   # omo → OpenCodeHarness → opencode binary
+    ("omc",      "claude"),     # omc → ClaudeCodeHarness → claude binary
 ])
-def test_call_harness_routes_by_key(harness_key, expected_cli):
+def test_call_harness_routes_by_key(harness_key, expected_bin):
     """call_harness() must route each harness key to its correct CLI binary (TAD-05)."""
     from app.tools.adapter import call_harness
 
     task_spec = {
         "harness": harness_key,
-        "command": "run",
-        "model": "test-model",
         "task": "do nothing",
         "worktree": "/tmp",
         "skills": [],
@@ -87,19 +92,17 @@ def test_call_harness_routes_by_key(harness_key, expected_cli):
             call_harness(task_spec)
 
         call_args = mock_run.call_args[0][0]
-        assert call_args[0] == expected_cli, (
-            f"harness='{harness_key}' must route to CLI '{expected_cli}', got '{call_args[0]}'"
+        assert call_args[0] == expected_bin, (
+            f"harness='{harness_key}' must route to binary '{expected_bin}', got '{call_args[0]}'"
         )
 
 
-def test_call_harness_defaults_to_omo_on_unknown_key():
-    """call_harness() with unknown harness key must fall back to omo (TAD-05)."""
+def test_call_harness_defaults_to_claude_on_unknown_key():
+    """call_harness() with unknown harness key must fall back to claude (TAD-05)."""
     from app.tools.adapter import call_harness
 
     task_spec = {
         "harness": "unknown-harness",
-        "command": "run",
-        "model": "test-model",
         "task": "do nothing",
         "worktree": "/tmp",
         "skills": [],
@@ -116,8 +119,10 @@ def test_call_harness_defaults_to_omo_on_unknown_key():
             "_write_sidecar"
         ):
             result = call_harness(task_spec)
-        # Should succeed (omo fallback) rather than crashing
+        # Should succeed (claude fallback) rather than crashing
         assert result is not None
+        # Verify it fell back to claude binary
+        assert mock_run.call_args[0][0][0] == "claude"
 
 
 # ── TAD-03: Retry with error context ─────────────────────────────────────────
@@ -128,9 +133,7 @@ def test_harness_retry_appends_error_to_task():
     from app.tools.adapter import OpenCodeHarness
 
     task_spec = {
-        "harness": "omo",
-        "command": "run",
-        "model": "test-model",
+        "harness": "opencode",
         "task": "migrate Foo.cs",
         "worktree": "/tmp",
         "skills": [],

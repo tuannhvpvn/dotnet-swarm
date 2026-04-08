@@ -17,7 +17,9 @@ from app.agents import (
     prepare_node,
     migrate_task_node,
     checkpoint_node,
-    fix_node
+    fix_node,
+    learn_node,
+    deliver_node,
 )
 
 console = Console()
@@ -30,11 +32,13 @@ def route_after_checkpoint(state: MigrationState) -> str:
 def route_after_validate(state: MigrationState) -> str:
     if len(state.build_errors) > 0 and state.fix_attempts < state.max_fix_attempts:
         return "fix"
-    
+    # Build passed — go to learn node
+    return "learn"
+
+def route_after_learn(state: MigrationState) -> str:
     pending = [t for t in state.tasks if t.status in ["pending", "failed"]]
     if pending:
         return "migrate_task"
-    
     return "documenter"
 
 def build_migration_graph(persistence=None, checkpointer=None):
@@ -49,7 +53,9 @@ def build_migration_graph(persistence=None, checkpointer=None):
     workflow.add_node("checkpoint", checkpoint_node)
     workflow.add_node("validator", validator_node)
     workflow.add_node("fix", fix_node)
+    workflow.add_node("learn", learn_node)
     workflow.add_node("documenter", documenter_node)
+    workflow.add_node("deliver", deliver_node)
 
     # 2. SOP Edge Routing Strategy
     workflow.add_edge(START, "surveyor")
@@ -58,20 +64,26 @@ def build_migration_graph(persistence=None, checkpointer=None):
     workflow.add_edge("human_gate", "prepare")
     workflow.add_edge("prepare", "migrate_task")
     workflow.add_edge("migrate_task", "checkpoint")
-    
+
     workflow.add_conditional_edges(
-        "checkpoint", 
-        route_after_checkpoint, 
+        "checkpoint",
+        route_after_checkpoint,
         {"human_gate": "human_gate", "validator": "validator"}
     )
     workflow.add_conditional_edges(
-        "validator", 
-        route_after_validate, 
-        {"fix": "fix", "migrate_task": "migrate_task", "documenter": "documenter"}
+        "validator",
+        route_after_validate,
+        {"fix": "fix", "learn": "learn"}
     )
-    
+    workflow.add_conditional_edges(
+        "learn",
+        route_after_learn,
+        {"migrate_task": "migrate_task", "documenter": "documenter"}
+    )
+
     workflow.add_edge("fix", "validator")
-    workflow.add_edge("documenter", END)
+    workflow.add_edge("documenter", "deliver")
+    workflow.add_edge("deliver", END)
 
     # 3. LangGraph Native Checkpointer (Dual-Write strategy vs MigrationPersistence)
     # Caller provides the checkpointer (e.g. SqliteSaver context) or falls back to InMemory
@@ -83,30 +95,55 @@ def build_migration_graph(persistence=None, checkpointer=None):
 
 def run_migration(solution_path: str, start_phase: int = 1, persistence=None):
     state = MigrationState(
-        migration_id=settings.migration_id, 
+        migration_id=settings.migration_id,
         solution_path=str(Path(solution_path).resolve())
     )
     logger.info(f"🚀 Migration Swarm ID: {state.migration_id}")
-    
+
     db_path = Path(solution_path) / "state" / "langgraph_state.sqlite"
     db_path.parent.mkdir(parents=True, exist_ok=True)
 
     with SqliteSaver.from_conn_string(str(db_path)) as checkpointer:
         graph = build_migration_graph(persistence=persistence, checkpointer=checkpointer)
         config = {"configurable": {"thread_id": state.migration_id}}
-        
+
         # Main run loop
         for event in graph.stream(state, config, stream_mode="values"):
             if persistence:
-                persistence.save(event) # Dual-write explicitly
-                
+                persistence.save(event)
+
         snapshot = graph.get_state(config)
-        # Handle the interrupt_before hook natively
+        # If paused at human_gate, notify user to use CLI approve command
         if snapshot.next and "human_gate" in snapshot.next:
-            if input("Approve Execution Plan? (y/n): ").lower() == "y":
-                for event in graph.stream(None, config, stream_mode="values"):
-                    if persistence:
-                        persistence.save(event)
+            console.print("\n[bold yellow]⛔ Migration paused at human gate.[/]")
+            console.print("[bold cyan]Review the execution plan, then run:[/]")
+            console.print(f"  [green]python main.py approve {solution_path}[/]")
+            console.print(f"  [green]python main.py resume {solution_path}[/]")
 
     logger.success("🎉 Migration Loop terminated (Completed or Paused)!")
+    return snapshot.values
+
+
+def resume_migration(solution_path: str, persistence=None):
+    """Resume a paused migration from the LangGraph checkpoint."""
+    db_path = Path(solution_path) / "state" / "langgraph_state.sqlite"
+    if not db_path.exists():
+        logger.error("No checkpoint found. Run 'start' first.")
+        return None
+
+    with SqliteSaver.from_conn_string(str(db_path)) as checkpointer:
+        graph = build_migration_graph(persistence=persistence, checkpointer=checkpointer)
+        config = {"configurable": {"thread_id": settings.migration_id}}
+
+        # Resume from checkpoint (passing None continues from last state)
+        for event in graph.stream(None, config, stream_mode="values"):
+            if persistence:
+                persistence.save(event)
+
+        snapshot = graph.get_state(config)
+        if snapshot.next and "human_gate" in snapshot.next:
+            console.print("\n[bold yellow]⛔ Migration paused at human gate again.[/]")
+            console.print(f"  [green]python main.py approve {solution_path}[/]")
+
+    logger.success("🎉 Resume completed!")
     return snapshot.values

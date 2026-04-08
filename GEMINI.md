@@ -43,12 +43,14 @@ A Queen-led autonomous agent swarm for automating .NET codebase migrations. It u
 | `tenacity` | latest | Retry logic (available, usage TBD) |
 | `sqlite3` | stdlib | State persistence database |
 ## AI Harness Commands (External)
-| Harness | Command | Model | Use Case |
-|---|---|---|---|
-| `omo` | `ultrawork` | `claude-4.6-sonnet` | Survey & validate |
-| `omx` | `team` | `claude-4.6-sonnet` | Phase 1 lift-and-shift |
-| `omc` | `team` | `claude-4.6-opus` | Phase 2 modernize |
-| `omo` | `ultrawork` | `glm-5` | Validate (build+test) |
+| Harness key | Binary | Install path | Model | Use Case |
+|---|---|---|---|---|
+| `opencode` | `opencode run` | `~/.local/bin/opencode` | `glm-5` / any | Survey & validate (oh-my-openagent ultrawork) |
+| `omx` | `omx exec` | `~/.local/share/pnpm/omx` | `claude-sonnet-4-6` | Phase 1 lift-and-shift (oh-my-codex) |
+| `claude` | `claude -p` | `/usr/bin/claude` | `claude-opus-4-6` | Phase 2 modernize (Claude Code headless) |
+| `gemini` | `gemini -p` | `~/.local/share/pnpm/gemini` | Gemini | Alternative: Google Gemini CLI |
+| `aider` | `aider --message` | `~/.local/bin/aider` | any | Alternative: deterministic diff-based edits |
+| `kiro` | `kiro-cli` | `~/.local/bin/kiro-cli` | any | Alternative: Kiro spec-driven agent |
 ## Environment Configuration
 - `migration_id` — unique migration run ID
 - `vibekanban_url` — default `http://localhost:3000/api/mcp`
@@ -124,10 +126,10 @@ A Queen-led autonomous agent swarm for automating .NET codebase migrations. It u
 
 ## Pattern: Queen-Led Agent Swarm (LangGraph + MCP)
 ## The Two Migration Phases
-| Phase | Goal | Harness | Model |
-|---|---|---|---|
-| Phase 1 — Lift & Shift | Upgrade `.csproj`, packages, and syntax to .NET 10 without architectural changes | `omx` | `claude-4.6-sonnet` |
-| Phase 2 — Modernize | Refactor to Clean Architecture + DDD + CQRS + TDD + Dapper/EF Core | `omc` | `claude-4.6-opus` |
+| Phase | Goal | Harness key | Binary | Model |
+|---|---|---|---|---|
+| Phase 1 — Lift & Shift | Upgrade `.csproj`, packages, and syntax to .NET 10 without architectural changes | `omx` | `omx exec` | `claude-sonnet-4-6` |
+| Phase 2 — Modernize | Refactor to Clean Architecture + DDD + CQRS + TDD + Dapper/EF Core | `claude` | `claude -p` | `claude-opus-4-6` |
 ## Graph Architecture
 ```
 ```

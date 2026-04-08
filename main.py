@@ -40,7 +40,7 @@ def resume(
     solution_path: str = typer.Argument(..., help="Đường dẫn repo .NET")
 ):
     """♻️ Khôi phục migration đang dở từ state được lưu."""
-    from app.core.graph import run_migration
+    from app.core.graph import resume_migration
     sol = Path(solution_path).resolve()
     setup_logging(str(sol))
     persistence = MigrationPersistence(str(sol))
@@ -52,7 +52,7 @@ def resume(
 
     console.print(f"[bold green]✅ Khôi phục migration: {state.migration_id}[/]")
     console.print(f"[bold cyan]Phase hiện tại:[/] {state.current_phase}")
-    run_migration(str(sol), start_phase=1, persistence=persistence)
+    resume_migration(str(sol), persistence=persistence)
 
 
 @app.command()

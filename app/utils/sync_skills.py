@@ -41,10 +41,12 @@ def run(solution_path: str):
         try:
             shutil.copytree(src, target / ".kiro/skills" / skill, dirs_exist_ok=True)
             shutil.copytree(src, target / ".opencode/skills" / skill, dirs_exist_ok=True)
-            (target / ".omc/skills").mkdir(parents=True, exist_ok=True)
-            (target / ".omx/skills").mkdir(parents=True, exist_ok=True)
-            shutil.copy(src / "SKILL.md", target / ".omc/skills" / f"{skill}.md")
-            shutil.copy(src / "SKILL.md", target / ".omx/skills" / f"{skill}.md")
+            # Claude Code: skills go in .claude/commands/ (slash-command skills)
+            (target / ".claude" / "commands").mkdir(parents=True, exist_ok=True)
+            # omx: skills go in AGENTS.md or omx's skill overlay dir
+            (target / ".omx" / "agents").mkdir(parents=True, exist_ok=True)
+            shutil.copy(src / "SKILL.md", target / ".claude" / "commands" / f"{skill}.md")
+            shutil.copy(src / "SKILL.md", target / ".omx" / "agents" / f"{skill}.md")
             table.add_row(skill, "[green]✅ OK[/]")
             success += 1
         except Exception as e:
